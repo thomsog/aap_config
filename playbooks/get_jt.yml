@@ -1,0 +1,34 @@
+---
+- name: Query AAP Controller Job Template
+  hosts: tigbit
+  gather_facts: false
+
+  collections:
+    - infra.controller_configuration
+
+  vars:
+    controller_hostname: '{{ aap_host }}'
+    controller_username: 'thomsog'
+    controller_oauthtoken: '{{ thomsog_api_token }}'
+    validate_certs: false
+    template_name: "jt test"
+
+  tasks:
+    - name: Query the job_templates endpoint
+      ansible.builtin.set_fact: {{ 
+                  query(
+                    'awx.awx.controller_api',
+                    'job_templates',
+                    query_params={ 'name__startswith' : 'foo', },
+                  ) | map(attribute='name') | list 
+                }}
+      register: api_response
+
+    - name: Display Job Template ID and Info
+      ansible.builtin.debug:
+        msg: >
+          The ID for '{{ template_name }}' is {{ api_response.json.results[0].id }}.
+          It executes the playbook: {{ api_response.json.results[0].playbook }}
+      when: api_response.json.count > 0
+
+

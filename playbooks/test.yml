@@ -1,0 +1,7 @@
+- name: Filter scratchpad
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - debug:
+        msg: "{{ [3, 1, 2] | sort }}"

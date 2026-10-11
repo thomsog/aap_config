@@ -1,0 +1,28 @@
+---
+namespace: tigbit
+name: aap_config
+version: 1.0.0
+readme: README.md
+authors:
+  - Your Name <you@example.com>
+
+description: Ansible Automation Platform configuration collection.
+license:
+  - GPL-3.0-or-later
+
+tags:
+  - aap
+  - config
+
+dependencies: {}
+repository: https://github.com
+documentation: https://github.com
+homepage: https://github.com
+issues: https://github.com
+
+build_ignore:
+  - "*.tar.gz"
+  - ".git"
+  - ".gitignore"
+  - "ansible.cfg"
+
