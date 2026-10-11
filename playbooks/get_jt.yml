@@ -19,7 +19,7 @@
                     verify_ssl=false,
                     return_all=true,
                     query_params={ 'name__startswith' : 'jt test', },
-                  ) | map(attribute='name') | list 
+                  ) 
                 }}
 
     - name: Display Job Template ID and Info
