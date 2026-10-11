@@ -1,0 +1,9 @@
+---
+- name: NOOP for testing
+  hosts: tigbit
+  gather_facts: false
+
+  tasks:
+    - name: Display hostname
+      ansible.builtin.debug:
+        msg: '{{ inventory_hostname }}':
