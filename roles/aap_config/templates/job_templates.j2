@@ -6,7 +6,7 @@ controller_templates:
   execution_environment: {{ item.execution_environment | default(omit) }}
   survey_enabled: {{ item.survey_enabled }}
   survey_spec:
-{{ (survey_api_response | to_nice_yaml(indent=2) | indent(4, first=true)).rstrip() }}
+{{ (survey_api_response | first | to_nice_yaml(indent=2) | indent(4, first=true)).rstrip() }}
   project: {{ item.summary_fields.project.name }}
   playbook: {{ item.playbook }}
 {% if credentials_api_response | length > 0 %}
@@ -16,4 +16,25 @@ controller_templates:
 {% endfor %}
 {% endif %}
   extra_vars: 
-{{ item.extra_vars | indent(4, first=true) }}
+{{ (item.extra_vars | from_json | to_nice_yaml(indent=2) | indent(4, first=true)).rstrip() }}
+  notification_templates_started: 
+{% if notification_templates_started_api_response | length == 0 %} []
+{% else %}
+{% for nts_name in (notification_templates_started_api_response | map(attribute='name') | list) %}
+    - {{ nts_name }}
+{% endfor %}
+{% endif %}
+  notification_templates_success: 
+{% if notification_templates_success_api_response | length == 0 %} []
+{% else %}
+{% for nts_name in (notification_templates_success_api_response | map(attribute='name') | list) %}
+    - {{ nts_name }}
+{% endfor %}
+{% endif %}
+  notification_templates_error: 
+{% if notification_templates_error_api_response | length == 0 %} []
+{% else %}
+{% for nte_name in (notification_templates_error_api_response | map(attribute='name') | list) %}
+    - {{ nte_name }}
+{% endfor %}
+{% endif %}

@@ -38,6 +38,60 @@
   ansible.builtin.debug:
     msg: '{{ credentials_api_response }}'
 
+- name: Query the notification_templates_started endpoint
+  ansible.builtin.set_fact:
+    notification_templates_started_api_response: >-
+      {{
+        query(
+          'ansible.controller.controller_api',
+          'job_templates/' ~ item.id ~ '/notification_templates_started/',
+           host=controller_hostname,
+           oauth_token=controller_oauthtoken,
+           verify_ssl=false,
+           return_all=true
+        )
+      }}
+
+- name: Display notification_templates_started_api_response
+  ansible.builtin.debug:
+    msg: '{{ notification_templates_started_api_response }}'
+
+- name: Query the notification_templates_success endpoint
+  ansible.builtin.set_fact:
+    notification_templates_success_api_response: >-
+      {{
+        query(
+          'ansible.controller.controller_api',
+          'job_templates/' ~ item.id ~ '/notification_templates_success/',
+           host=controller_hostname,
+           oauth_token=controller_oauthtoken,
+           verify_ssl=false,
+           return_all=true
+        )
+      }}
+
+- name: Display notification_templates_success_api_response
+  ansible.builtin.debug:
+    msg: '{{ notification_templates_success_api_response }}'
+
+- name: Query the notification_templates_error endpoint
+  ansible.builtin.set_fact:
+    notification_templates_error_api_response: >-
+      {{
+        query(
+          'ansible.controller.controller_api',
+          'job_templates/' ~ item.id ~ '/notification_templates_error/',
+           host=controller_hostname,
+           oauth_token=controller_oauthtoken,
+           verify_ssl=false,
+           return_all=true
+        )
+      }}
+
+- name: Display notification_templates_error_api_response
+  ansible.builtin.debug:
+    msg: '{{ notification_templates_error_api_response }}'
+
 - name: Create CaC file
   ansible.builtin.template:
     src: job_templates.j2
