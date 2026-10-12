@@ -1,0 +1,19 @@
+---
+controller_templates:
+- name: {{ item.name }}
+  job_type: {{ item.job_type }}
+  inventory: {{ item.summary_fields.inventory.name }}
+  execution_environment: {{ item.execution_environment | default(omit) }}
+  survey_enabled: {{ item.survey_enabled }}
+  survey_spec:
+{{ (survey_api_response | to_nice_yaml(indent=2) | indent(4, first=true)).rstrip() }}
+  project: {{ item.summary_fields.project.name }}
+  playbook: {{ item.playbook }}
+{% if credentials_api_response | length > 0 %}
+  credentials:
+{% for cred_name in (credentials_api_response | map(attribute='name') | list) %}
+    - {{ cred_name }}
+{% endfor %}
+{% endif %}
+  extra_vars: 
+{{ item.extra_vars | indent(4, first=true) }}

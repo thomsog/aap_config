@@ -1,0 +1,45 @@
+---
+# Prepare the job template to be written to file
+
+- name: Query the survey endpoint
+  ansible.builtin.set_fact:
+    survey_api_response: >-
+      {{
+        query(
+          'ansible.controller.controller_api',
+          'job_templates/{{ item.id }}/survey_spec',
+           host=controller_hostname,
+           oauth_token=controller_oauthtoken,
+           verify_ssl=false,
+           return_all=true,
+           query_params={ 'name__startswith' : 'jt test' },
+        )
+      }}
+
+- name: Display Job Template ID and Info
+  ansible.builtin.debug:
+    msg: '{{ survey_api_response }}'
+
+- name: Query the credentials endpoint
+  ansible.builtin.set_fact:
+    credentials_api_response: >-
+      {{
+        query(
+          'ansible.controller.controller_api',
+          'job_templates/' ~ item.id ~ '/credentials/',
+           host=controller_hostname,
+           oauth_token=controller_oauthtoken,
+           verify_ssl=false,
+           return_all=true
+        )
+      }}
+
+- name: Display credentials_api_response
+  ansible.builtin.debug:
+    msg: '{{ credentials_api_response }}'
+
+- name: Create CaC file
+  ansible.builtin.template:
+    src: job_templates.j2
+    dest: '~/aap/config/job_templates.yml'
+  delegate_to: localhost

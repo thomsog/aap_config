@@ -8,42 +8,16 @@
 
   tasks:
     - name: Query the job_templates endpoint
-      ansible.builtin.set_fact: 
-        jt_api_response: >-
-                {{ 
-                  query(
-                    'ansible.controller.controller_api',
-                    'job_templates',
-                    host=controller_hostname,
-                    oauth_token=controller_oauthtoken,
-                    verify_ssl=false,
-                    return_all=true,
-                    query_params={ 'name__startswith' : 'jt test', },
-                  ) 
-                }}
-
-    - name: Display Job Template ID and Info
-      ansible.builtin.debug:
-        msg: '{{ item.id }}'
-      loop: '{{ jt_api_response }}'
-
-    #- meta: end_play
-
-    - name: Query the survey endpoint
-      ansible.builtin.set_fact:
-        survey_api_response: >-
-                {{
-                  query(
-                    'ansible.controller.controller_api',
-                    'job_templates/{{ jt_api_response[0].id }}/survey_spec',
-                    host=controller_hostname,
-                    oauth_token=controller_oauthtoken,
-                    verify_ssl=false,
-                    return_all=true,
-                    query_params={ 'name__startswith' : 'jt test', },
-                  )
-                }}
-
-    - name: Display Job Template ID and Info
-      ansible.builtin.debug:
-        msg: '{{ survey_api_response }}'
+      ansible.builtin.include_role:
+        name: tigbit.aap_config.aap_config
+        tasks_from: job_templates.yml
+      loop: "{{ query(
+                  'ansible.controller.controller_api',
+                  'job_templates',
+                  host=controller_hostname,
+                  oauth_token=controller_oauthtoken,
+                  verify_ssl=false,
+                  return_all=true,
+                  query_params={ 'name': 'jt test' }
+              ) 
+            }}"
