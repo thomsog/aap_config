@@ -7,5 +7,5 @@
     - name: Display the variable passed from the workflow
       ansible.builtin.debug:
         msg:
-          - "{{ unique_workflow_input }}"
+          - "{{ shared_output_variable }}"
 
