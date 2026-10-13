@@ -17,24 +17,25 @@ controller_templates:
 {% endif %}
   extra_vars: 
 {{ (item.extra_vars | from_json | to_nice_yaml(indent=2) | indent(4, first=true)).rstrip() }}
-  notification_templates_started: 
-{% if notification_templates_started_api_response | length == 0 %} []
+{% set empty_bracket = '[]' %}
+  notification_templates_started: {% if notification_templates_started_api_response | length == 0 %}{{ empty_bracket }}
 {% else %}
 {% for nts_name in (notification_templates_started_api_response | map(attribute='name') | list) %}
+
     - {{ nts_name }}
 {% endfor %}
 {% endif %}
-  notification_templates_success: 
-{% if notification_templates_success_api_response | length == 0 %} []
+  notification_templates_success: {% if notification_templates_success_api_response | length == 0 %}{{ empty_bracket }}
 {% else %}
 {% for nts_name in (notification_templates_success_api_response | map(attribute='name') | list) %}
+
     - {{ nts_name }}
 {% endfor %}
 {% endif %}
-  notification_templates_error: 
-{% if notification_templates_error_api_response | length == 0 %} []
+  notification_templates_error: {% if notification_templates_error_api_response | length == 0 %}{{ empty_bracket }} 
 {% else %}
 {% for nte_name in (notification_templates_error_api_response | map(attribute='name') | list) %}
+
     - {{ nte_name }}
 {% endfor %}
 {% endif %}
