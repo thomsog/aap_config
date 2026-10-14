@@ -30,6 +30,16 @@ controller_templates:
   ask_job_slice_count_on_launch: {{ item.ask_job_slice_count_on_launch }}
   ask_timeout_on_launch: {{ item.ask_timeout_on_launch }}
   ask_instance_groups_on_launch: {{ item.ask_instance_groups_on_launch }}
+  become_enabled: {{ item.become_enabled }}
+  diff_mode: {{ item.diff_mode }}
+  allow_simultaneous: {{ item.allow_simultaneous }}
+  custom_virtualenv: {{ item.custom_virtualenv }}
+  job_slice_count: {{ item.job_slice_count }}
+  webhook_service: {{ item.webhook_service }}
+  webhook_credential: {{ item.webhook_credential }}
+  prevent_instance_group_fallback: {{ item.prevent_instance_group_fallback }}
+  opa_query_path: {{ item.opa_query_path }}
+{##############################################}
   survey_enabled: {{ item.survey_enabled }}
   survey_spec:
 {{ (survey_api_response | first | to_nice_yaml(indent=2) | indent(4, first=true)).rstrip() }}
