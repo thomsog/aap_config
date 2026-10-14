@@ -1,0 +1,23 @@
+---
+- name: Query AAP Controller workflows
+  hosts: tigbit
+  gather_facts: false
+
+  collections:
+    - infra.controller_configuration
+
+  tasks:
+    - name: Query the workflow_job_templates endpoint
+      ansible.builtin.include_role:
+        name: tigbit.aap_config.aap_config
+        tasks_from: workflow_job_templates.yml
+      loop: "{{ query(
+                  'ansible.controller.controller_api',
+                  'workflow_job_templates',
+                  host=controller_hostname,
+                  oauth_token=controller_oauthtoken,
+                  verify_ssl=false,
+                  return_all=true,
+                  query_params={ 'name': 'workflow B' }
+              ) 
+            }}"

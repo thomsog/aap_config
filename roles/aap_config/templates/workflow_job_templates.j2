@@ -1,0 +1,11 @@
+---
+controller_workflows:
+  - name: {{ item.name }}
+    description: {{ item.description }}
+    organization: {{ item.organization }}
+    simplified_workflow_nodes:
+{% for node in workflow_nodes_api_response %}
+      - identifier: {{ node.identifier }}
+        unified_job_template: {{ node.summary_fields.unified_job_template.name }}
+{% endfor %}
+

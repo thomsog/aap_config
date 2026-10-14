@@ -1,0 +1,26 @@
+---
+# Prepare the workflow job template to be written to file
+
+- name: Query the workflow_nodes
+  ansible.builtin.set_fact:
+    workflow_nodes_api_response: >-
+      {{
+        query(
+          'ansible.controller.controller_api',
+          'workflow_job_templates/{{ item.id }}/workflow_nodes',
+           host=controller_hostname,
+           oauth_token=controller_oauthtoken,
+           verify_ssl=false,
+           return_all=true
+        )
+      }}
+
+- name: Display workflow_nodes_api_response
+  ansible.builtin.debug:
+    msg: '{{ workflow_nodes_api_response }}'
+
+- name: Create CaC file
+  ansible.builtin.template:
+    src: workflow_job_templates.j2
+    dest: '~/aap/config/workflow_job_templates.yml'
+  delegate_to: localhost
