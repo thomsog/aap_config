@@ -3,12 +3,36 @@ controller_templates:
 - name: {{ item.name }}
   job_type: {{ item.job_type }}
   inventory: {{ item.summary_fields.inventory.name }}
+  organization: {{ item.summary_fields.organization.name }}
   execution_environment: {{ item.execution_environment | default(omit) }}
+  project: {{ item.summary_fields.project.name }}
+  playbook: {{ item.playbook }}
+  scm_branch: {{ item.scm_branch }}
+  forks: {{ item.forks }}
+  limit: {{ item.limit }}
+  verbosity: {{ item.verbosity }}
+  job_tags: {{ item.job_tags }}
+  skip_tags: {{ item.skip_tags }}
+  timeout: {{ item.timeout }}
+  ask_scm_branch_on_launch: {{ item.ask_scm_branch_on_launch }}
+  ask_diff_mode_on_launch: {{ item.ask_diff_mode_on_launch }}
+  ask_variables_on_launch: {{ item.ask_variables_on_launch }}
+  ask_limit_on_launch: {{ item.ask_limit_on_launch }}
+  ask_tags_on_launch: {{ item.ask_tags_on_launch }}
+  ask_skip_tags_on_launch: {{ item.ask_skip_tags_on_launch }}
+  ask_job_type_on_launch: {{ item.ask_job_type_on_launch }}
+  ask_verbosity_on_launch: {{ item.ask_verbosity_on_launch }}
+  ask_inventory_on_launch: {{ item.ask_inventory_on_launch }}
+  ask_credential_on_launch:  {{ item.ask_credential_on_launch }}
+  ask_execution_environment_on_launch: {{ item.ask_execution_environment_on_launch }}
+  ask_labels_on_launch: {{ item.ask_labels_on_launch }}
+  ask_forks_on_launch: {{ item.ask_forks_on_launch }}
+  ask_job_slice_count_on_launch: {{ item.ask_job_slice_count_on_launch }}
+  ask_timeout_on_launch: {{ item.ask_timeout_on_launch }}
+  ask_instance_groups_on_launch: {{ item.ask_instance_groups_on_launch }}
   survey_enabled: {{ item.survey_enabled }}
   survey_spec:
 {{ (survey_api_response | first | to_nice_yaml(indent=2) | indent(4, first=true)).rstrip() }}
-  project: {{ item.summary_fields.project.name }}
-  playbook: {{ item.playbook }}
 {% if credentials_api_response | length > 0 %}
   credentials:
 {% for cred_name in (credentials_api_response | map(attribute='name') | list) %}
