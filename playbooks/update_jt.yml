@@ -12,45 +12,7 @@
 
     target_pattern: 'jt test'
 
-    # Toggle to dynamically provision missing labels found in your templates list
-    aap_configuration_autocreate_labels: true
-
   tasks:
-    - name: Query the job_tmplates endpoint
-      ansible.builtin.set_fact:
-        job_template_api_response: >-
-          {{
-            query(
-              'ansible.controller.controller_api',
-              'job_templates',
-               host=controller_hostname,
-               oauth_token=controller_oauthtoken,
-               verify_ssl=false,
-               return_all=true,
-               query_params={ 'name__startswith' : 'jt test' },
-            )
-          }}
-
-    - name: Display Job Template Info
-      ansible.builtin.debug:
-        msg: '{{ job_template_api_response[0].summary_fields.organization.name }}'
-        verbosity: 2
-
-    - name: Query AAP API for matching job templates
-      ansible.builtin.uri:
-        url: "https://{{ controller_hostname }}/api/controller/v2/job_templates/?name__startswith={{ target_pattern | urlencode }}&page_size=200"
-        method: GET
-        headers:
-          Authorization: "Bearer {{ controller_oauthtoken }}"
-          Content-Type: "application/json"
-        validate_certs: false
-        status_code: 200
-      register: job_template_api_response
-
-    - name: Debug found templates count
-      ansible.builtin.debug:
-        msg: "Found {{ job_template_api_response.json.results | length }}"
-
     - name: Clear execution environment for matched job templates
       ansible.builtin.uri:
         url: "https://{{ controller_hostname + item.url }}"
@@ -64,4 +26,15 @@
           execution_environment: null
         validate_certs: false
         status_code: 200
-      loop: "{{ job_template_api_response.json.results }}"
+      loop: >-
+          {{
+            query(
+              'ansible.controller.controller_api',
+              'job_templates',
+               host=controller_hostname,
+               oauth_token=controller_oauthtoken,
+               verify_ssl=false,
+               return_all=true,
+               query_params={ 'name__startswith' : target_pattern },
+            )
+          }}
