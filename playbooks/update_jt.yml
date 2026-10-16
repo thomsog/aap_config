@@ -35,6 +35,14 @@
                oauth_token=controller_oauthtoken,
                verify_ssl=false,
                return_all=true,
-               query_params={ 'name__startswith' : target_pattern },
+               query_params={ 'name__startswith' : target_pattern,
+                              'inventory__name': 'tigbit' },
             )
           }}
+      when:
+        - item.execution_environment is not none
+      register: api_response
+
+    - name: Display api_response
+      ansible.builtin.debug:
+        msg: '{{ api_response }}'
