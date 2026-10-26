@@ -1,0 +1,25 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    aap_hostname: 'https://{{ controller_hostname }}'
+    aap_token: '{{ controller_oauthtoken }}'
+    aap_validate_certs: false
+    output_path: "~/aap/config/"
+    omit_id: true
+    inventory_name: "tigbit"
+    export_related_objects: true
+    input_tag: 
+      - controller_job_templates   
+      - controller_projects       
+      - controller_inventories   
+      - controller_credentials
+      - controller_credential_types
+      - controller_execution_environments
+      - controller_groups
+      - controller_hosts
+    env_fields_as_variables: false
+    secrets_as_variables: true
+  roles:
+    - infra.aap_configuration_extended.filetree_create

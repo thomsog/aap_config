@@ -1,0 +1,35 @@
+---
+- name: Apply Configuration as Code from a Filetree
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  # Load the generated stubs here so that your group_vars/host_vars
+  # can cleanly overwrite them with higher precedence
+  vars_files:
+    - "{{ dir_orgs_vars }}/env_variables.yml"
+
+  vars:
+    aap_hostname: 'https://{{ controller_hostname }}'
+    aap_token: '{{ controller_oauthtoken }}'
+    aap_validate_certs: false
+    #output_path: "~/aap/config/"
+
+    omit_id: true
+    inventory_name: "tigbit"
+    export_related_objects: true
+
+    dir_orgs_vars: "~/aap/config/"
+    controller_configuration_filetree_read_layout: create
+
+    # FIX: Disables no_log across all underlying dispatch/credential tasks
+    aap_configuration_secure_logging: false
+
+  tasks:
+    - name: Load and apply variables from the filetree
+      ansible.builtin.include_role:
+        name: infra.aap_configuration_extended.filetree_read
+
+    - name: Dispatch variables to the AAP / Controller API
+      ansible.builtin.include_role:
+        name: infra.aap_configuration.dispatch

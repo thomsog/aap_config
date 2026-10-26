@@ -2,10 +2,40 @@
 controller_workflows:
   - name: {{ item.name }}
     description: {{ item.description }}
-    organization: {{ item.organization }}
+    extra_vars:
+{{ (item.extra_vars | from_yaml |  to_nice_yaml(indent=4) | indent(6, first=true)).rstrip() }}
+    organization: {{ item.summary_fields.organization.name }}
+    survey_enabled: {{ item.survey_enabled }}
+    allow_simultaneous: {{ item.allow_simultaneous }}
+    ask_variables_on_launch: {{ item.ask_variables_on_launch }}
+    inventory: {{item.summary_fields.inventory.name }}
+    limit: {{ item.limit }}
+    scm_branch: {{ item.scm_branch }}
+    ask_inventory_on_launch: {{ item.ask_inventory_on_launch }}
+    ask_scm_branch_on_launch: {{ item.ask_scm_branch_on_launch }}
+    ask_limit_on_launch: {{ item.ask_limit_on_launch }}
+    webhook_service: {{ item.webhook_service }}
+    webhook_credential: {{ item.webhook_credential }}
+    ask_labels_on_launch: {{ item.ask_labels_on_launch }}
+    ask_skip_tags_on_launch: {{ item.ask_skip_tags_on_launch }}
+    ask_tags_on_launch: {{ item.ask_tags_on_launch }}
+    skip_tags: {{ item.skip_tags }}
+    job_tags: {{ item.job_tags }}
     simplified_workflow_nodes:
+{% set empty_bracket = '[]' %}
 {% for node in workflow_nodes_api_response %}
       - identifier: {{ node.identifier }}
         unified_job_template: {{ node.summary_fields.unified_job_template.name }}
+        all_parents_must_converge: {{ node.all_parents_must_converge }}
+        success_nodes: {% if node.success_nodes | length == 0 %}{{ empty_bracket }}
+{% else %}
+{% for success_node in node.success_nodes %}
+        - {{ success_node }}
+{% endfor %}
+{% endif %}
+        failure_nodes: 
+          {{ node.failure_nodes }}
+        always_nodes: 
+          {{ node.always_nodes }}
 {% endfor %}
 

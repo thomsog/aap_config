@@ -18,6 +18,6 @@
                   oauth_token=controller_oauthtoken,
                   verify_ssl=false,
                   return_all=true,
-                  query_params={ 'name': 'workflow B' }
+                  query_params={ 'name': 'workflow A' }
               ) 
             }}"
