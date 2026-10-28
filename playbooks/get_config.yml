@@ -7,15 +7,19 @@
     aap_hostname: 'https://{{ controller_hostname }}'
     aap_token: '{{ controller_oauthtoken }}'
     aap_validate_certs: false
+
     output_path: "~/aap/config/"
     omit_id: true
-    #inventory_name: "tigbit"
-    export_related_objects: true
-    input_tag: 
-      - controller_inventories
-      - controller_job_templates
-    env_fields_as_variables: true
+    env_fields_as_variables: false
+    export_related_objects: false
     secrets_as_variables: true
+
+    inventory_name: "tigbit"
+    organization_filter: "tigbit"
+    input_tag: 
+      - controller_workflow_job_templates
+      - controller_job_templates
+      - controller_schedules
 
   roles:
     - infra.aap_configuration_extended.filetree_create

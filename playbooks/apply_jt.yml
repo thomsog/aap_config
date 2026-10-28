@@ -1,25 +1,32 @@
 ---
-- name: Apply Controller Job Templates Configuration
-  hosts: tigbit
-  connection: local
+- name: Update a single Job Template using Configuration as Code
+  hosts: localhost
   gather_facts: false
+  connection: local
 
   vars:
-    # AAP Connection parameters
-    aap_hostname: '{{ controller_hostname }}'
+    aap_hostname: 'https://{{ controller_hostname }}'
     aap_token: '{{ controller_oauthtoken }}'
     aap_validate_certs: false
-    
-    # Toggle to dynamically provision missing labels found in your templates list
-    aap_configuration_autocreate_labels: true
+
+    # The base directory remains fixed
+    dir_orgs_vars: "~/aap/config/"
+
+    controller_configuration_filetree_read_layout: "create"
+
+    # Inject the runtime variable 'target_template' into the filetree path
+    filetree_controller_job_templates_dirs:
+      - "{{ filetree_read_base_dir }}/controller_job_templates.d/{{ target_template }}.yml"
 
   tasks:
-    - name: Include the AAP Configuration variables
-      ansible.builtin.include_vars:
-        file: ~/aap/config/job_templates.yml
-
-    - name: Create or Update Job Templates in Controller
+    - name: Read the specific Job Template from the file tree
       ansible.builtin.include_role:
-        name: infra.aap_configuration.controller_job_templates
-      when: controller_templates is defined
+        name: infra.aap_configuration_extended.filetree_read
+      tags:
+        - job_templates
 
+    - name: Dispatch the single Job Template configuration to AAP
+      ansible.builtin.include_role:
+        name: infra.aap_configuration.dispatch
+      tags:
+        - job_templates
