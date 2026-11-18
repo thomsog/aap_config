@@ -8,7 +8,7 @@
     aap_token: '{{ controller_oauthtoken }}'
     aap_validate_certs: false
 
-    output_path: "~/aap/config/"
+    output_path: "~/aap/git/tigbit_inventory/data/aap_config/"
     omit_id: true
     env_fields_as_variables: false
     export_related_objects: false
