@@ -14,12 +14,21 @@
     export_related_objects: false
     secrets_as_variables: true
 
+    # Options to handle the variables stub file
+    #
+    # Don't generate the file
+    #generate_env_variables_stub: false
+    #
+    # Generate the file in a different location
+    env_variables_stub_path: /tmp/env_variables_stub.yml
+
     inventory_name: "tigbit"
     organization_filter: "tigbit"
     input_tag: 
-      - controller_workflow_job_templates
-      - controller_job_templates
-      - controller_schedules
+      - all
+      #- controller_workflow_job_templates
+      #- controller_job_templates
+      #- controller_schedules
 
   roles:
     - infra.aap_configuration_extended.filetree_create
